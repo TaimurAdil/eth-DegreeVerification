@@ -93,7 +93,7 @@ App = {
             console.log(task)
 
             const degreeId = task[0].toNumber()
-            const taskContent = task[1]
+            const taskContent = task[0] + " ," + task[1] + " ," + task[2] + " ," + task[3]
 
             console.log(taskContent)
                 // const taskCompleted = task[2]
