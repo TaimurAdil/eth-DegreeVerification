@@ -66,6 +66,7 @@ contract DegreeVerification
         string FullName;
         string StakeholderType;
         bytes32 StakeholderHash;
+        //string accessType;
     }
     
     mapping(uint => Stakeholder) public StakeholderList;

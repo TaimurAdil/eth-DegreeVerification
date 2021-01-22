@@ -1,5 +1,5 @@
-var TodoList = artifacts.require("./DegreeVerification.sol");
+var DegreeVerification = artifacts.require("./DegreeVerification.sol");
 
 module.exports = function(deployer) {
-    deployer.deploy(TodoList);
+    deployer.deploy(DegreeVerification);
 };
