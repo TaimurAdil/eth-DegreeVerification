@@ -28,33 +28,8 @@ contract DegreeVerification
         return(DegreeDataList[uniqueId].DegreeName, DegreeDataList[uniqueId].UniversityName); 
     }
 
-    /*    
-    // Create and Verifying Hash
-    */    
-    
-    function GetEthDegreeHash(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public pure returns (bytes32)
-    {
-        bytes32 messageHash = GetMessageHash(_degreeName, _universityName, _degreeJSON);
-        bytes32 ethSignMessageHash = GetEthMessageSignedHash(messageHash);
-        
-        return ethSignMessageHash;
-    }
-    
-    function GetMessageHash(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public pure returns (bytes32)
-    {
-        // have to add uniqueId in parameter to distinguish hash
-        return keccak256(abi.encodePacked(_degreeName, _universityName, _degreeJSON));
-    }
-    
-    function GetEthMessageSignedHash(bytes32 _messageHash) public pure returns (bytes32)
-    {
-        // prefix Ethereum signing message (32 bit) 
-        // followed by length of message it required for ecrecover function
-        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
-    }
-
     /*
-    // Registration
+    // User Registration and Login
     */
 
     uint public NextStakeholderId;
@@ -82,5 +57,30 @@ contract DegreeVerification
     function SignInStakeholder(uint uniqueId) view public returns(string memory, bytes32)
     {
         return(StakeholderList[uniqueId].Username, StakeholderList[uniqueId].StakeholderHash); 
+    }
+
+    /*    
+    // Create and Verifying Hash
+    */    
+    
+    function GetEthDegreeHash(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public pure returns (bytes32)
+    {
+        bytes32 messageHash = GetMessageHash(_degreeName, _universityName, _degreeJSON);
+        bytes32 ethSignMessageHash = GetEthMessageSignedHash(messageHash);
+        
+        return ethSignMessageHash;
+    }
+    
+    function GetMessageHash(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public pure returns (bytes32)
+    {
+        // have to add uniqueId in parameter to distinguish hash
+        return keccak256(abi.encodePacked(_degreeName, _universityName, _degreeJSON));
+    }
+    
+    function GetEthMessageSignedHash(bytes32 _messageHash) public pure returns (bytes32)
+    {
+        // prefix Ethereum signing message (32 bit) 
+        // followed by length of message it required for ecrecover function
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _messageHash));
     }
 }

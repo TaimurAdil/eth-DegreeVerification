@@ -137,12 +137,16 @@ App = {
         window.location.reload()
     },
 
-    // toggleCompleted: async(e) => {
-    //     App.setLoading(true)
-    //     const taskId = e.target.name
-    //     await App.degreeVer.toggleCompleted(taskId)
-    //     window.location.reload()
-    // },
+    // Login Section
+    createDegree: async() => {
+        App.setLoading(true)
+
+        const loginUserName = $('#login-form-email').val()
+        const loginUserPass = $('#login-form-password').val()
+
+        // await App.degreeVer.Login(loginUserName, loginUserPass)
+        window.location.reload()
+    },
 
     setLoading: (boolean) => {
         App.loading = boolean

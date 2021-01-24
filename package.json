@@ -1,7 +1,7 @@
 {
     "name": "eth-todo-list",
     "version": "1.0.0",
-    "description": "Blockchain Todo List Powered By Ethereum",
+    "description": "Blockchain Degree Verification Powered By Ethereum Smart Contract",
     "main": "truffle-config.js",
     "directories": {
         "test": "test"
