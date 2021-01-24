@@ -33,30 +33,54 @@ contract DegreeVerification
     */
 
     uint public NextStakeholderId;
+    string public SignUpStateMessage;
     
     struct Stakeholder
     {
         uint UniqueId;
         string Username;
+        string UserPass;
         string FullName;
-        string StakeholderType;
+        address UserAddress;
         bytes32 StakeholderHash;
-        //string accessType;
+        string AccountType;
     }
     
     mapping(uint => Stakeholder) public StakeholderList;
-    
-    function SignupStakeholder(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public returns (uint)
+
+    function SignupStakeholder(string memory _usermame, string memory _password, string memory _fullName, string memory _accountType) public returns (uint)
     {
-        bytes32 _degreeHash = GetEthDegreeHash(_degreeName, _universityName, _degreeJSON);
-        StakeholderList[NextStakeholderId] = Stakeholder(NextStakeholderId, _degreeName, _universityName, _degreeJSON, _degreeHash);
-        NextStakeholderId++;
-        return NextStakeholderId - 1;
+        address sender = msg.sender;
+        address adminAddress = 0x99BC5c25Cd1750E386B9440C77b6e76b2b77C91A;
+
+        if(sender == adminAddress)
+        {
+            bytes32 _stakeHolderHash = GetEthDegreeHash(_usermame, _password, _password);
+
+            StakeholderList[NextStakeholderId] = Stakeholder(NextStakeholderId, _usermame, _password, _fullName, sender, _stakeHolderHash, _accountType);
+            NextStakeholderId++;
+            SignUpStateMessage = "Successfully Signup, Permission Granted";
+            return NextStakeholderId - 1;
+        }
+        SignUpStateMessage = "Not Allowed to Signup, Permission Denied";
+        return 0;
     }
     
-    function SignInStakeholder(uint uniqueId) view public returns(string memory, bytes32)
+    function SignInStakeholder(string memory _usermame, string memory _password) view public returns(string memory)
     {
-        return(StakeholderList[uniqueId].Username, StakeholderList[uniqueId].StakeholderHash); 
+        for(uint i= 0; i<NextStakeholderId; i++)
+        {
+            if(keccak256(abi.encodePacked((StakeholderList[i].Username))) == keccak256(abi.encodePacked((_usermame))) &&  keccak256(abi.encodePacked((StakeholderList[i].UserPass))) == keccak256(abi.encodePacked((_password))))
+            {
+                bytes32 _stakeHolderHash = GetEthDegreeHash(_usermame, _password, _password);
+
+                if(StakeholderList[i].StakeholderHash == _stakeHolderHash)
+                {
+                   return _usermame;
+                }
+            }
+        }
+        return "";
     }
 
     /*    

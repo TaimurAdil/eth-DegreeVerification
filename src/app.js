@@ -138,13 +138,28 @@ App = {
     },
 
     // Login Section
-    createDegree: async() => {
+    login: async() => {
         App.setLoading(true)
 
         const loginUserName = $('#login-form-email').val()
         const loginUserPass = $('#login-form-password').val()
 
         // await App.degreeVer.Login(loginUserName, loginUserPass)
+        window.location.reload()
+    },
+
+    // Sign Up Section
+    signup: async() => {
+        App.setLoading(true)
+
+        const signupUserName = $('#login-form-email').val()
+        const signupUserPass = $('#login-form-password').val()
+        const signupFullName = $('#login-form-fullname').val()
+        const signupAccountType = $('#login-form-password').val()
+
+        await App.degreeVer.SignupStakeholder(signupUserName, signupUserPass, signupFullName, signupAccountType);
+        alert(await App.degreeVer.SignUpState());
+
         window.location.reload()
     },
 

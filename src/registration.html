@@ -24,7 +24,7 @@
 
     <!-- Document Title
 	============================================= -->
-    <title>Login | Degree Verification</title>
+    <title>Sign Up | Degree Verification</title>
 
 </head>
 
@@ -51,8 +51,8 @@
 
                         <div class="panel panel-default divcenter noradius noborder" style="max-width: 400px;">
                             <div class="panel-body" style="padding: 40px;">
-                                <form id="login-form" name="login-form" class="nobottommargin" onSubmit="App.login(); return false;">
-                                    <h3>Login to your Account</h3>
+                                <form id="login-form" name="login-form" class="nobottommargin" onSubmit="App.signup(); return false;">
+                                    <h3>Register your Account</h3>
 
                                     <div class="col_full">
                                         <label for="login-form-username">Email:</label>
@@ -64,8 +64,18 @@
                                         <input type="password" id="login-form-password" name="login-form-password" value="" class="form-control not-dark" />
                                     </div>
 
+                                    <div class="col_full">
+                                        <label for="login-form-username">Full Name:</label>
+                                        <input type="text" id="login-form-fullname" name="login-form-fullname" value="" class="form-control not-dark" />
+                                    </div>
+
+                                    <div class="col_full">
+                                        <label for="login-form-account-type">Account Type:</label>
+                                        <input type="password" id="login-form-account-type" name="login-form-account-type" value="" class="form-control not-dark" />
+                                    </div>
+
                                     <div class="col_full nobottommargin">
-                                        <button class="button button-3d button-black nomargin" id="login-form-submit" name="login-form-submit" value="login">Login</button>
+                                        <button class="button button-3d button-black nomargin" id="login-form-submit" name="login-form-submit" value="Sign Up">Sign Up</button>
                                     </div>
                                 </form>
 
