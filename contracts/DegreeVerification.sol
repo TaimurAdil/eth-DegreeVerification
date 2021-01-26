@@ -6,32 +6,67 @@ contract DegreeVerification
     
     struct DegreeData
     {
-        uint UniqueId;
-        string DegreeName;
+        uint SerialNumber;
+        string NationalIdentityCard;
+        string StudentName;
+        string StudentId;
+        string DegreeTitle;
         string UniversityName;
         string DegreeJSON;
         bytes32 DegreeHash;
+        address InsertedBy;
+        // Status 
     }
     
     mapping(uint => DegreeData) public DegreeDataList;
     
-    function CreateDegree(string memory _degreeName, string memory _universityName, string memory _degreeJSON) public returns (uint)
+    // Function Used to Insert data to blockchain
+    function CreateDegree(string memory _nationIdCard, string memory _studentName, string memory _studentId, string memory _degreeTitle, string memory _universityName, string memory _degreeJSON) public returns (uint)
     {
-        bytes32 _degreeHash = GetEthDegreeHash(_degreeName, _universityName, _degreeJSON);
-        DegreeDataList[NextDegreeId] = DegreeData(NextDegreeId, _degreeName, _universityName, _degreeJSON, _degreeHash);
+        bytes32 _degreeHash = GetEthDegreeHash(_degreeTitle, _universityName, _degreeJSON);
+        DegreeDataList[NextDegreeId] = DegreeData(NextDegreeId, _nationIdCard, _studentName, _studentId, _degreeTitle, _universityName, _degreeJSON, _degreeHash, msg.sender);
+
         NextDegreeId++;
         return NextDegreeId - 1;
     }
-    
-    function VerifyDegree(uint uniqueId) view public returns(string memory, string memory)
+
+    // Function to Generate QR-Code
+    function GetDegreeInfo(string memory _nationIdCard, string memory _degreeTitle, string memory _university) view public returns (bytes32, uint)
     {
-        return(DegreeDataList[uniqueId].DegreeName, DegreeDataList[uniqueId].UniversityName); 
+        for(uint i= 0; i < NextStakeholderId; i++)
+        {
+            if(keccak256(abi.encodePacked((DegreeDataList[i].NationalIdentityCard))) == keccak256(abi.encodePacked((_nationIdCard))) 
+            && keccak256(abi.encodePacked((DegreeDataList[i].DegreeTitle))) == keccak256(abi.encodePacked((_degreeTitle))) 
+            && keccak256(abi.encodePacked((DegreeDataList[i].UniversityName))) == keccak256(abi.encodePacked((_university))))
+            {
+               return(DegreeDataList[i].DegreeHash, DegreeDataList[i].SerialNumber);
+            }
+        }
+    }
+
+    // Function to Generate QR-Code
+    function GetDegreeInfo(uint _degreeId) view public returns(uint, string memory, string memory, string memory, string memory, string memory, bytes32)
+    {
+        return(
+            DegreeDataList[_degreeId].SerialNumber,
+            DegreeDataList[_degreeId].NationalIdentityCard,
+            DegreeDataList[_degreeId].StudentName,
+            DegreeDataList[_degreeId].StudentId,
+            DegreeDataList[_degreeId].DegreeTitle, 
+            DegreeDataList[_degreeId].UniversityName,
+            DegreeDataList[_degreeId].DegreeHash
+            ); 
+    }
+
+    // Function Used to Verify Degree 
+    function VerifyDegree(uint _degreeId) view public returns (bytes32, uint)
+    {
+        return(DegreeDataList[_degreeId].DegreeHash, DegreeDataList[_degreeId].SerialNumber);
     }
 
     /*
     // User Registration and Login
     */
-
     uint public NextStakeholderId;
     string public SignUpStateMessage;
     
@@ -66,9 +101,10 @@ contract DegreeVerification
         return 0;
     }
     
+    // Function Used to Sign In dApp
     function SignInStakeholder(string memory _usermame, string memory _password) view public returns(string memory)
     {
-        for(uint i= 0; i<NextStakeholderId; i++)
+        for(uint i= 0; i < NextStakeholderId; i++)
         {
             if(keccak256(abi.encodePacked((StakeholderList[i].Username))) == keccak256(abi.encodePacked((_usermame))) &&  keccak256(abi.encodePacked((StakeholderList[i].UserPass))) == keccak256(abi.encodePacked((_password))))
             {

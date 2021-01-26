@@ -9,7 +9,6 @@ App = {
         await App.render()
     },
 
-    // https://medium.com/metamask/https-medium-com-metamask-breaking-change-injecting-web3-7722797916a8
     loadWeb3: async() => {
 
         if (typeof web3 !== 'undefined') {
@@ -74,7 +73,8 @@ App = {
         $('#account').html(App.account)
 
         // Render Tasks
-        await App.renderTasks()
+        // await App.renderTasks()
+        await App.GenerateQR()
 
         // Update loading state
         App.setLoading(false)
@@ -118,16 +118,88 @@ App = {
         }
     },
 
-    createDegree: async() => {
-        App.setLoading(true)
+    getAccount: async() => {
+        App.account
+    },
 
+    createDegree: async() => {
+        const studentCNIC = $('#studentCNIC').val()
         const studentId = $('#studentId').val()
         const studentName = $('#studentName').val()
-        const degreeName = $('#degreeName').val()
-        const university = $('#university').val()
+        const degreeTitle = $('#degreeTitle').val()
+        const universityName = $('#university').val()
 
-        await App.degreeVer.CreateDegree(degreeName, university, studentId)
+        var degreeJson = {
+            StudentCNIC: $('#studentCNIC').val(),
+            StudentId: $('#studentId').val(),
+            StudentName: $('#studentName').val(),
+            DegreeTitle: $('#degreeTitle').val(),
+            UniversityName: $('#university').val()
+        };
+
+        await App.degreeVer.CreateDegree(studentCNIC, studentName, studentId, degreeTitle, universityName, JSON.stringify(degreeJson));
+        alert('Degree Published on Chain Successfully...!!!');
         window.location.reload()
+
+        // var degreeInfo = await App.degreeVer.GetDegreeInfo(studentCNIC);
+        // var degreeJsonQRCode = {
+        //     DegreeHash: degreeInfo[0],
+        //     DegreeId: degreeInfo[1]
+        // };
+
+        // var oQRCode = new QRCode("qrcode", {
+        //     width: 200,
+        //     height: 200
+        // });
+        // oQRCode.clear();
+        // oQRCode.makeCode(JSON.stringify(degreeJsonQRCode));
+    },
+
+    GenerateQR: async() => {
+        const degreeCount = await App.degreeVer.NextDegreeId()
+        const $taskTemplate = $('.taskTemplate')
+
+        var QRContent = `<table class='table'>
+        <thead class='thead-dark'>
+          <tr>
+            <th>#</th>
+            <th>CNIC</th>
+            <th>Student Id</th>
+            <th>Student Name</th>
+            <th>Degree Title</th>
+            <th>QR</th>
+          </tr>
+        </thead>
+        <tbody>`;
+
+        for (var i = 0; i <= degreeCount - 1; i++) {
+            const degreeData = await App.degreeVer.GetDegreeInfo(i)
+
+            const degreeId = degreeData[0]
+            const studentCNIC = degreeData[1]
+            const studentName = degreeData[2]
+            const studentId = degreeData[3]
+            const degreeTitle = degreeData[4]
+            const universityName = degreeData[5]
+            const degreeHash = degreeData[6]
+
+            var degreeJson = {
+                DegreeId: degreeId,
+                StudentCNIC: studentCNIC,
+                Hash: degreeHash
+            };
+
+            QRContent += "<tr> <td>" + degreeId + "</td> <td>" + studentCNIC + "</td> <td>" + studentId + "</td> <td>" + studentName + "</td> <td>" + degreeTitle + "</td> <td> <img id='barcode' src='https://api.qrserver.com/v1/create-qr-code/?data=" + JSON.stringify(degreeJson) + "&amp;size=200x200'  alt=''  title='" + degreeHash + "' width='200'  height='200' /> </td> </tr>";
+
+        }
+
+        QRContent += '</tbody> </table>';
+
+        const $degreeTemplate = $taskTemplate.clone()
+        $degreeTemplate.find('.content').html(QRContent)
+        $('#taskList').append($degreeTemplate)
+
+        $degreeTemplate.show()
     },
 
     verifyDegree: async() => {
@@ -144,8 +216,16 @@ App = {
         const loginUserName = $('#login-form-email').val()
         const loginUserPass = $('#login-form-password').val()
 
-        // await App.degreeVer.Login(loginUserName, loginUserPass)
-        window.location.reload()
+        const signedInResult = await App.degreeVer.SignInStakeholder(loginUserName, loginUserPass)
+        console.log(signedInResult)
+
+        if (signedInResult == "") {
+            window.location.reload()
+        } else {
+            document.cookie = App.account;
+            console.log(document.cookie)
+            window.location.replace("/index-corporate.html");
+        }
     },
 
     // Sign Up Section
@@ -158,7 +238,7 @@ App = {
         const signupAccountType = $('#login-form-password').val()
 
         await App.degreeVer.SignupStakeholder(signupUserName, signupUserPass, signupFullName, signupAccountType);
-        alert(await App.degreeVer.SignUpState());
+        alert(await App.degreeVer.SignUpStateMessage());
 
         window.location.reload()
     },

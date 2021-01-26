@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="css/animate.css" type="text/css" />
     <link rel="stylesheet" href="css/magnific-popup.css" type="text/css" />
 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
     <link rel="stylesheet" href="css/responsive.css" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lt IE 9]>
@@ -24,7 +26,7 @@
 
     <!-- Document Title
 	============================================= -->
-    <title>Upload Degree | Degree Verification</title>
+    <title>Verify Degree | Degree Verification</title>
 
 </head>
 
@@ -104,7 +106,7 @@
                 <h1>My Account</h1>
                 <ol class="breadcrumb">
                     <li><a href="#">Home</a></li>
-                    <li class="active">Upload Degree</li>
+                    <li class="active">QR Generation</li>
                 </ol>
             </div>
 
@@ -116,48 +118,64 @@
         <section id="content">
             <div class="content-wrap">
                 <div class="container clearfix">
-                    <div class="col_two_third nobottommargin aligncenter">
-                        <h3>Upload Degree now</h3>
-                        <p></p>
-                        <form id="upload-form" name="upload-form" class="nobottommargin">
+                    <div id="content">
 
-                            <div class="col_half">
-                                <label for="studentCNIC">Student CNIC:</label>
-                                <input type="text" id="studentCNIC" name="studentCNIC" value="" class="form-control" />
+                        <ul id="taskList" class="list-unstyled">
+                            <div class="taskTemplate" class="checkbox" style="display: none">
+                                <label>
+             
+              <span class="content"></span>
+            </label>
                             </div>
-
-                            <div class="col_half">
-                                <label for="studentId">University Student ID:</label>
-                                <input type="text" id="studentId" name="studentId" value="" class="form-control" />
-                            </div>
-
-                            <div class="col_half col_last">
-                                <label for="studentName">Student Name:</label>
-                                <input type="text" id="studentName" name="studentName" value="" class="form-control" />
-                            </div>
-
-                            <div class="clear"></div>
-
-                            <div class="col_half">
-                                <label for="degreeTitle">Degree Title:</label>
-                                <input type="text" id="degreeTitle" name="degreeTitle" value="" class="form-control" />
-                            </div>
-
-                            <div class="col_half col_last">
-                                <label for="university">University:</label>
-                                <input type="text" id="university" name="university" value="" class="form-control" />
-                            </div>
-
-                            <p></p>
-                            <div class="clear"></div>
-
-                            <div class="col_one_third">
-                                <button onclick="App.createDegree(); return false;" class="button button-3d button-black nomargin" id="upload" name="upload" value="register">Upload Now</button>
-                            </div>
-                        </form>
+                        </ul>
+                        <ul id="completedTaskList" class="list-unstyled">
+                        </ul>
                     </div>
                 </div>
             </div>
+
+            <!-- <div class="content-wrap">
+
+                <div class="container clearfix">
+
+                    <div class="col_two_third nobottommargin aligncenter">
+                        <h3>Generate QR</h3>
+
+                        <p></p>
+
+                        <div id="masterQRCode">
+                            <div id="qrcode"></div>
+                        </div>
+
+                        <div class="col_half">
+                            <label for="newTask">Student CNIC:</label>
+                            <input type="text" id="studentCNIC" name="studentCNIC" value="" class="form-control" />
+                        </div>
+
+                        <div class="col_half col_last">
+                            <label for="newTask">Degree Title:</label>
+                            <input type="text" id="degreeTitle" name="degreeTitle" value="" class="form-control" />
+                        </div>
+
+                        <div class="col_half">
+                            <label for="newTask">University Name:</label>
+                            <input type="text" id="university" name="university" value="" class="form-control" />
+                        </div>
+
+                        <div class="clear"></div>
+
+                        <div class="col_full nobottommargin">
+                            <button onclick="App.GenerateQR(); return false;" class="button button-3d button-black nomargin" id="generateQR" name="generateQR" value="register">Generate QR</button>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div> -->
+
         </section>
         <!-- #content end -->
 
@@ -173,7 +191,7 @@
 
                     <div class="col_half">
                         Copyrights &copy; 2021 All Rights Reserved.<br>
-                        <!-- <div class="copyright-links"><a href="#">Terms of Use</a> / <a href="#">Privacy Policy</a></div> -->
+                        <div class="copyright-links"><a href="#">Terms of Use</a> / <a href="#">Privacy Policy</a></div>
                     </div>
 
                     <div class="col_half col_last tright">
@@ -243,7 +261,6 @@
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
     <script type="text/javascript" src="js/qrcode.js"></script>
-
     <!-- Footer Scripts
 	============================================= -->
     <script type="text/javascript" src="js/functions.js"></script>
