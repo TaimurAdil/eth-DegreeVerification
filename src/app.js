@@ -67,7 +67,7 @@ App = {
         }
 
         // Update app loading state
-        App.setLoading(true)
+        App.SetLoading(true)
 
         // Render Account
         $('#account').html(App.account)
@@ -77,7 +77,13 @@ App = {
         await App.GenerateQR()
 
         // Update loading state
-        App.setLoading(false)
+        App.SetLoading(false)
+
+        var cookie = App.GetCookie("username");
+        console.log('Cookie ' + cookie);
+        if ((cookie == null || cookie == '') && window.location.pathname != '/login.html') {
+            window.location.replace("/login.html");
+        }
     },
 
     renderTasks: async() => {
@@ -111,6 +117,11 @@ App = {
         App.account
     },
 
+    LoginSignup: async() => {
+        App.DeSetCookie();
+        window.location.replace("/login.html");
+    },
+
     createDegree: async() => {
         const studentCNIC = $('#studentCNIC').val()
         const studentId = $('#studentId').val()
@@ -139,13 +150,13 @@ App = {
         var QRContent = `<table class='table'>
         <thead class='thead-dark'>
           <tr>
-            <th>#</th>
+            <th>Degree Id</th>
             <th>CNIC</th>
             <th>Student Id</th>
             <th>Student Name</th>
             <th>Degree Title</th>
             <th>QR</th>
-            <th>QR</th>
+            <th>QR Json</th>
           </tr>
         </thead>
         <tbody>`;
@@ -180,7 +191,7 @@ App = {
     },
 
     VerifyDegree: async() => {
-        //App.setLoading(true)
+        //App.SetLoading(true)
         const degreeJson = $('#DegreeJSONtoVerify').val()
         var degreeObj = JSON.parse(degreeJson);
 
@@ -188,32 +199,33 @@ App = {
 
         console.log(VerificationResult)
 
-        const $taskTemplate = $('.taskTemplate1')
+        const $taskTemplate = $('#verified-degree-list')
 
-        var DegreeVerifiedContent = `<div class="card text-white bg-success mb-3" style="max-width: 18rem;">
-            <div class="card-header">Header</div>
-            <div class="card-body">
-              <h5 class="card-title">Success card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-            </div>
-          </div>`;
+        var DegreeVerifiedContent = `<table>
+        <tr>
+            <th>Degree Id</th>
+            <th>CNIC</th>
+            <th>Student Name</th>
+            <th>Degree Title</th>
+            <th>Signed By</th>
+        </tr>
+        <tr>
+            <td>` + VerificationResult[0] + `</td>
+            <td>` + VerificationResult[1] + `</td>
+            <td>` + VerificationResult[2] + `</td>
+            <td>` + VerificationResult[4] + `</td>
+            <td>` + VerificationResult[5] + `</td>
+        </tr>
+    </table>`;
 
-        var DegreeNotVerifiedContent = `<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
-          <div class="card-header">Header</div>
-          <div class="card-body">
-            <h5 class="card-title">Success card title</h5>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          </div>
-        </div>`;
+        var DegreeNotVerifiedContent = `<p> <b>No Data Found</b> </p>`;
 
         const $degreeTemplate = $taskTemplate.clone()
 
-        if (VerificationResult[0] != '') {
-            $degreeTemplate.find('.content1').html(DegreeVerifiedContent)
-            $('#taskList1').html($degreeTemplate)
-        } else {
-            $degreeTemplate.find('.content1').html(DegreeNotVerifiedContent)
-            $('#taskList1').html($degreeTemplate)
+        if (VerificationResult[1] != '' || VerificationResult[2] != '' || VerificationResult[4] != '') {
+            $('#verified-degree-list').html(DegreeVerifiedContent)
+        } else if (VerificationResult[1] == '') {
+            $('#verified-degree-list').html(DegreeNotVerifiedContent)
         }
 
         $degreeTemplate.show()
@@ -221,10 +233,14 @@ App = {
 
     // Login Section
     login: async() => {
-        App.setLoading(true)
+        App.SetLoading(true)
 
         const loginUserName = $('#login-form-email').val()
         const loginUserPass = $('#login-form-password').val()
+
+        if (loginUserName == "" || loginUserPass == "") {
+            window.location.reload()
+        }
 
         const signedInResult = await App.degreeVer.SignInStakeholder(loginUserName, loginUserPass)
         console.log(signedInResult)
@@ -232,15 +248,14 @@ App = {
         if (signedInResult == "") {
             window.location.reload()
         } else {
-            document.cookie = App.account;
-            console.log(document.cookie)
+            App.SetCookie("username", App.account, 30);
             window.location.replace("/index-corporate.html");
         }
     },
 
     // Sign Up Section
     signup: async() => {
-        App.setLoading(true)
+        App.SetLoading(true)
 
         const signupUserName = $('#login-form-email').val()
         const signupUserPass = $('#login-form-password').val()
@@ -253,7 +268,7 @@ App = {
         window.location.reload()
     },
 
-    setLoading: (boolean) => {
+    SetLoading: (boolean) => {
         App.loading = boolean
         const loader = $('#loader')
         const content = $('#content')
@@ -263,6 +278,48 @@ App = {
         } else {
             loader.hide()
             content.show()
+        }
+    },
+
+    //************************//
+    // Cookies Helper Methods //
+    //************************//
+    SetCookie: (cname, cvalue, exdays) => {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toGMTString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    },
+
+    DeSetCookie: () => {
+        document.cookie = null;
+    },
+
+    GetCookie: (cname) => {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    },
+
+    CheckCookie: () => {
+        var user = App.GetCookie("username");
+        if (user != "") {
+            alert("Welcome again " + user);
+        } else {
+            user = prompt("Please enter your name:", "");
+            if (user != "" && user != null) {
+                App.SetCookie("username", user, 30);
+            }
         }
     }
 }
