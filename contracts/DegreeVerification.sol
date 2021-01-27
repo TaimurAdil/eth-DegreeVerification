@@ -59,9 +59,14 @@ contract DegreeVerification
     }
 
     // Function Used to Verify Degree 
-    function VerifyDegree(uint _degreeId) view public returns (bytes32, uint)
+    function VerifyDegree(uint _degreeId, bytes32 _degreeRequestedHash) view public returns (string memory, string memory, string memory, string memory)
     {
-        return(DegreeDataList[_degreeId].DegreeHash, DegreeDataList[_degreeId].SerialNumber);
+        bytes32 _degreeComputedHash = GetEthDegreeHash(DegreeDataList[_degreeId].DegreeTitle, DegreeDataList[_degreeId].UniversityName, DegreeDataList[_degreeId].DegreeJSON);
+
+        if(_degreeComputedHash == _degreeRequestedHash)
+        {
+            return (DegreeDataList[_degreeId].NationalIdentityCard, DegreeDataList[_degreeId].StudentName, DegreeDataList[_degreeId].StudentId, DegreeDataList[_degreeId].DegreeTitle);
+        }
     }
 
     /*

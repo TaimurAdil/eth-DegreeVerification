@@ -96,22 +96,11 @@ App = {
             const taskContent = task[0] + " ," + task[1] + " ," + task[2] + " ," + task[3]
 
             console.log(taskContent)
-                // const taskCompleted = task[2]
 
             // Create the html for the task
             const $degreeTemplate = $taskTemplate.clone()
             $degreeTemplate.find('.content').html(taskContent)
-                // $degreeTemplate.find('input')
-                // .prop('name', taskId)
-                // .prop('checked', taskCompleted)
-                // .on('click', App.toggleCompleted)
-
-            // Put the task in the correct list
-            // if (taskCompleted) {
-            //     $('#completedTaskList').append($newTaskTemplate)
-            // } else {
             $('#taskList').append($degreeTemplate)
-                // }
 
             // Show the task
             $degreeTemplate.show()
@@ -138,21 +127,9 @@ App = {
         };
 
         await App.degreeVer.CreateDegree(studentCNIC, studentName, studentId, degreeTitle, universityName, JSON.stringify(degreeJson));
-        alert('Degree Published on Chain Successfully...!!!');
+        //alert('Degree Published on Chain Successfully...!!!');
+        console.log('Degree Published on Chain Successfully...!!!')
         window.location.reload()
-
-        // var degreeInfo = await App.degreeVer.GetDegreeInfo(studentCNIC);
-        // var degreeJsonQRCode = {
-        //     DegreeHash: degreeInfo[0],
-        //     DegreeId: degreeInfo[1]
-        // };
-
-        // var oQRCode = new QRCode("qrcode", {
-        //     width: 200,
-        //     height: 200
-        // });
-        // oQRCode.clear();
-        // oQRCode.makeCode(JSON.stringify(degreeJsonQRCode));
     },
 
     GenerateQR: async() => {
@@ -167,6 +144,7 @@ App = {
             <th>Student Id</th>
             <th>Student Name</th>
             <th>Degree Title</th>
+            <th>QR</th>
             <th>QR</th>
           </tr>
         </thead>
@@ -189,8 +167,7 @@ App = {
                 Hash: degreeHash
             };
 
-            QRContent += "<tr> <td>" + degreeId + "</td> <td>" + studentCNIC + "</td> <td>" + studentId + "</td> <td>" + studentName + "</td> <td>" + degreeTitle + "</td> <td> <img id='barcode' src='https://api.qrserver.com/v1/create-qr-code/?data=" + JSON.stringify(degreeJson) + "&amp;size=200x200'  alt=''  title='" + degreeHash + "' width='200'  height='200' /> </td> </tr>";
-
+            QRContent += "<tr> <td>" + degreeId + "</td> <td>" + studentCNIC + "</td> <td>" + studentId + "</td> <td>" + studentName + "</td> <td>" + degreeTitle + "</td> <td> <img id='barcode' src='https://api.qrserver.com/v1/create-qr-code/?data=" + JSON.stringify(degreeJson) + "&amp;size=200x200'  alt=''  title='" + degreeHash + "' width='200'  height='200' /> </td> <td> <pre> " + JSON.stringify(degreeJson, undefined, 2) + " </pre> </td> </tr>";
         }
 
         QRContent += '</tbody> </table>';
@@ -202,11 +179,44 @@ App = {
         $degreeTemplate.show()
     },
 
-    verifyDegree: async() => {
-        App.setLoading(true)
-        const content = $('#newTask').val()
-        await App.degreeVer.createTask(content)
-        window.location.reload()
+    VerifyDegree: async() => {
+        //App.setLoading(true)
+        const degreeJson = $('#DegreeJSONtoVerify').val()
+        var degreeObj = JSON.parse(degreeJson);
+
+        const VerificationResult = await App.degreeVer.VerifyDegree(degreeObj.DegreeId, degreeObj.Hash)
+
+        console.log(VerificationResult)
+
+        const $taskTemplate = $('.taskTemplate1')
+
+        var DegreeVerifiedContent = `<div class="card text-white bg-success mb-3" style="max-width: 18rem;">
+            <div class="card-header">Header</div>
+            <div class="card-body">
+              <h5 class="card-title">Success card title</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>`;
+
+        var DegreeNotVerifiedContent = `<div class="card text-white bg-danger mb-3" style="max-width: 18rem;">
+          <div class="card-header">Header</div>
+          <div class="card-body">
+            <h5 class="card-title">Success card title</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>`;
+
+        const $degreeTemplate = $taskTemplate.clone()
+
+        if (VerificationResult[0] != '') {
+            $degreeTemplate.find('.content1').html(DegreeVerifiedContent)
+            $('#taskList1').html($degreeTemplate)
+        } else {
+            $degreeTemplate.find('.content1').html(DegreeNotVerifiedContent)
+            $('#taskList1').html($degreeTemplate)
+        }
+
+        $degreeTemplate.show()
     },
 
     // Login Section

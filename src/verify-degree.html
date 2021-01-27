@@ -11,6 +11,7 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400,400italic,600,700|Raleway:300,400,500,600,700|Crete+Round:400italic" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="css/style.css" type="text/css" />
+    <link rel="stylesheet" href="css/style-verDegree.css" type="text/css" />
     <link rel="stylesheet" href="css/dark.css" type="text/css" />
     <link rel="stylesheet" href="css/font-icons.css" type="text/css" />
     <link rel="stylesheet" href="css/animate.css" type="text/css" />
@@ -114,37 +115,61 @@
         <!-- Content
 		============================================= -->
         <section id="content">
-
             <div class="content-wrap">
-
                 <div class="container clearfix">
-
                     <div class="col_two_third nobottommargin aligncenter">
 
-
-                        <h3>Verify Degree now</h3>
-
+                        <h3>Verify Degree Now</h3>
                         <p></p>
 
-                        <form id="verify-form" name="verify-form" class="nobottommargin" onSubmit="App.verifyDegree(); return false;">
+                        <div class="col_half">
+                            <label for="DegreeJSONtoVerify">Scan QR or Paste Json:</label>
+                            <input type="text" id="DegreeJSONtoVerify" name="DegreeJSONtoVerify" value="" class="form-control" />
+                        </div>
 
-                            <div class="col_half">
-                                <label for="newTask">Student ID:</label>
-                                <input type="text" id="newTask" name="newTask" value="" class="form-control" />
-                            </div>
+                        <div class="clear"></div>
 
-                            <div class="clear"></div>
-
-                            <div class="col_full nobottommargin">
-                                <button type="submit" class="button button-3d button-black nomargin" id="verify" name="verify" value="register">Verify Now</button>
-                            </div>
-
-                        </form>
-
+                        <div class="col_full nobottommargin">
+                            <button onclick="App.VerifyDegree();" class="button button-3d button-black nomargin">Verify Now</button>
+                        </div>
                     </div>
 
-                </div>
+                    <div class="content-wrap">
+                        <div class="container clearfix">
+                            <div id="content">
+                                <div id="taskList1" class="list-unstyled">
+                                    <div class="taskTemplate1" class="checkbox" style="display: none">
+                                        <span class="content1"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+
+                    <div class="container h-100">
+                        <div class="user_card">
+                            <table>
+                                <tr>
+                                    <th>#</th>
+                                    <th>CNIC</th>
+                                    <th>Student Id</th>
+                                    <th>Student Name</th>
+                                    <th>Degree Title</th>
+                                </tr>
+                                <td>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                    <tr></tr>
+                                </td>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
 
         </section>
