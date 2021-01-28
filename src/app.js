@@ -193,14 +193,22 @@ App = {
     VerifyDegree: async() => {
         //App.SetLoading(true)
         const degreeJson = $('#DegreeJSONtoVerify').val()
-        var degreeObj = JSON.parse(degreeJson);
+        const $taskTemplate = $('#verified-degree-list')
 
+        try {
+            JSON.parse(degreeJson)
+        } catch (e) {
+            var JsonNotValid = `<p> <center> <b>QR / JSON Not Valid</b> </center> </p>`;
+            const $degreeTemplate = $taskTemplate.clone()
+            $('#verified-degree-list').html(JsonNotValid)
+
+            return false;
+        }
+
+        var degreeObj = JSON.parse(degreeJson);
         const VerificationResult = await App.degreeVer.VerifyDegree(degreeObj.DegreeId, degreeObj.Hash)
 
         console.log(VerificationResult)
-
-        const $taskTemplate = $('#verified-degree-list')
-
         var DegreeVerifiedContent = `<table>
         <tr>
             <th>Degree Id</th>
@@ -218,10 +226,9 @@ App = {
         </tr>
     </table>`;
 
-        var DegreeNotVerifiedContent = `<p> <b>No Data Found</b> </p>`;
+        var DegreeNotVerifiedContent = `<p> <center> <b>No Data Found</b> </center> </p>`;
 
         const $degreeTemplate = $taskTemplate.clone()
-
         if (VerificationResult[1] != '' || VerificationResult[2] != '' || VerificationResult[4] != '') {
             $('#verified-degree-list').html(DegreeVerifiedContent)
         } else if (VerificationResult[1] == '') {
