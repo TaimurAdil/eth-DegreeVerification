@@ -12,6 +12,8 @@
 
  
 ### Contributers:
+Subject: Block Chain
+University: Information Technology University
  1. Muhammad Taimur Adil (MSDS19040)
  2. Jawwad Tariq (MSDS19038)
  3. Mukarram Ahmad (MSDS19054)
