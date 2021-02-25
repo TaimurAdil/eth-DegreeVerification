@@ -88,16 +88,16 @@ contract DegreeVerification
     
     mapping(uint => Stakeholder) public StakeholderList;
 
-    function SignupStakeholder(string memory _usermame, string memory _password, string memory _fullName, string memory _accountType) public returns (uint)
+    function SignupStakeholder(string memory _username, address _userAddress, string memory _password, string memory _fullName, string memory _accountType) public returns (uint)
     {
-        address sender = msg.sender;
-        address adminAddress = 0x99BC5c25Cd1750E386B9440C77b6e76b2b77C91A;
+        address senderAddress = msg.sender;
+        address adminAddress = 0xa1D1edb18C71a5E193F09366203f5EfD23EBBe8d;
 
-        if(sender == adminAddress)
+        if(senderAddress == adminAddress)
         {
-            bytes32 _stakeHolderHash = GetEthDegreeHash(_usermame, _password, _password);
+            bytes32 _stakeHolderHash = GetEthDegreeHash(_username, _password, _password);
 
-            StakeholderList[NextStakeholderId] = Stakeholder(NextStakeholderId, _usermame, _password, _fullName, sender, _stakeHolderHash, _accountType);
+            StakeholderList[NextStakeholderId] = Stakeholder(NextStakeholderId, _username, _password, _fullName, _userAddress, _stakeHolderHash, _accountType);
             NextStakeholderId++;
             SignUpStateMessage = "Successfully Signup, Permission Granted";
             return NextStakeholderId - 1;
@@ -109,15 +109,16 @@ contract DegreeVerification
     // Function Used to Sign In dApp
     function SignInStakeholder(string memory _usermame, string memory _password) view public returns(string memory)
     {
+        address senderAddress = msg.sender;
         for(uint i= 0; i < NextStakeholderId; i++)
         {
             if(keccak256(abi.encodePacked((StakeholderList[i].Username))) == keccak256(abi.encodePacked((_usermame))) &&  keccak256(abi.encodePacked((StakeholderList[i].UserPass))) == keccak256(abi.encodePacked((_password))))
             {
                 bytes32 _stakeHolderHash = GetEthDegreeHash(_usermame, _password, _password);
-
-                if(StakeholderList[i].StakeholderHash == _stakeHolderHash)
+                // (StakeholderList[i].StakeholderHash == _stakeHolderHash && StakeholderList[i].UserAddress ==  senderAddress)
+                if(StakeholderList[i].StakeholderHash == _stakeHolderHash && StakeholderList[i].UserAddress ==  senderAddress)
                 {
-                   return _usermame;
+                    return _usermame;
                 }
             }
         }

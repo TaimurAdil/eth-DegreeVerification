@@ -201,14 +201,14 @@ App = {
             var JsonNotValid = `<p> <center> <b>QR / JSON Not Valid</b> </center> </p>`;
             const $degreeTemplate = $taskTemplate.clone()
             $('#verified-degree-list').html(JsonNotValid)
-
+            alert('QR / JSON Not Valid');
             return false;
         }
 
         var degreeObj = JSON.parse(degreeJson);
         const VerificationResult = await App.degreeVer.VerifyDegree(degreeObj.DegreeId, degreeObj.Hash)
+        //alert(VerificationResult);
 
-        console.log(VerificationResult)
         var DegreeVerifiedContent = `<table>
         <tr>
             <th>Degree Id</th>
@@ -233,6 +233,7 @@ App = {
             $('#verified-degree-list').html(DegreeVerifiedContent)
         } else if (VerificationResult[1] == '') {
             $('#verified-degree-list').html(DegreeNotVerifiedContent)
+            alert('No Data Found');
         }
 
         $degreeTemplate.show()
@@ -250,13 +251,22 @@ App = {
         }
 
         const signedInResult = await App.degreeVer.SignInStakeholder(loginUserName, loginUserPass)
-        console.log(signedInResult)
-
+        //alert(signedInResult)
+        
         if (signedInResult == "") {
             window.location.reload()
         } else {
-            App.SetCookie("username", App.account, 30);
-            window.location.replace("/index-corporate.html");
+            alert(signedInResult)
+            if(signedInResult == 'hr@hr.com')
+            {
+                App.SetCookie("username", App.account, 30);
+                window.location.replace("/index-corporate2.html");
+            }
+            else
+            {
+                App.SetCookie("username", App.account, 30);
+                window.location.replace("/index-corporate.html");
+            }
         }
     },
 
@@ -264,12 +274,13 @@ App = {
     signup: async() => {
         App.SetLoading(true)
 
-        const signupUserName = $('#login-form-email').val()
+        const signupUserName = $('#login-form-username').val()
+        const signupUserAddress = $('#login-form-useraddress').val()
         const signupUserPass = $('#login-form-password').val()
         const signupFullName = $('#login-form-fullname').val()
         const signupAccountType = $('#login-form-password').val()
 
-        await App.degreeVer.SignupStakeholder(signupUserName, signupUserPass, signupFullName, signupAccountType);
+        await App.degreeVer.SignupStakeholder(signupUserName, signupUserAddress, signupUserPass, signupFullName, signupAccountType);
         alert(await App.degreeVer.SignUpStateMessage());
 
         window.location.reload()

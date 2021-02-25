@@ -56,7 +56,12 @@
 
                                     <div class="col_full">
                                         <label for="login-form-username">Email:</label>
-                                        <input type="text" id="login-form-email" name="login-form-email" value="" class="form-control not-dark" />
+                                        <input type="text" id="login-form-username" name="login-form-username" value="" class="form-control not-dark" />
+                                    </div>
+
+                                    <div class="col_full">
+                                        <label for="login-form-useraddress">Public Key:</label>
+                                        <input type="text" id="login-form-useraddress" name="login-form-useraddress" value="" class="form-control not-dark" />
                                     </div>
 
                                     <div class="col_full">
@@ -65,17 +70,20 @@
                                     </div>
 
                                     <div class="col_full">
-                                        <label for="login-form-username">Full Name:</label>
+                                        <label for="login-form-fullname">Full Name:</label>
                                         <input type="text" id="login-form-fullname" name="login-form-fullname" value="" class="form-control not-dark" />
                                     </div>
 
-                                    <div class="col_full">
+                                    <!-- <div class="col_full">
                                         <label for="login-form-account-type">Account Type:</label>
                                         <input type="password" id="login-form-account-type" name="login-form-account-type" value="" class="form-control not-dark" />
-                                    </div>
+                                    </div> -->
 
-                                    <div class="col_full nobottommargin">
+                                    <div class="col_half">
                                         <button class="button button-3d button-black nomargin" id="login-form-submit" name="login-form-submit" value="Sign Up">Sign Up</button>
+                                    </div>
+                                    <div class="col_half col_last">
+                                        <button onclick="(function(){ window.location.replace('/login.html'); })();return false;" class="button button-3d button-black nomargin" id="login-form-login1" name="login-form-login1" value="Login">Login</button>
                                     </div>
                                 </form>
                                 <div class="line line-sm"></div>
