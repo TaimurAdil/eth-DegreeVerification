@@ -251,12 +251,11 @@ App = {
         }
 
         const signedInResult = await App.degreeVer.SignInStakeholder(loginUserName, loginUserPass)
-        //alert(signedInResult)
+        alert(signedInResult)
         
         if (signedInResult == "") {
             window.location.reload()
         } else {
-            alert(signedInResult)
             if(signedInResult == 'hr@hr.com')
             {
                 App.SetCookie("username", App.account, 30);
