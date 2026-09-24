@@ -1,5 +1,3 @@
-[![LinkedIn][linkedin-shield]][linkedin-url]
-
 ## Degree Verification using Ethereum
 
 ## Background
