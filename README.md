@@ -8,13 +8,13 @@ In recent years, the blockchain has been promoted as a promising new technology 
 
 ## Proposed Solution
 
-![proposedsolution](./img/proposed_solution.jpg)
+![proposedsolution](./img/solution.png)
 
 ## Preparing Credentials
 
 Whats inside the QR-Code
 
-![preparingcredentials](./img/preparing_credentials.jpg)
+![preparingcredentials](./img/verify.png)
 
 ## Setup this project
  1. Node Js
